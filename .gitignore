@@ -1,0 +1,6 @@
+*.iso
+*.img
+*.qcow2
+*.vmdk
+.DS_Store
+build/

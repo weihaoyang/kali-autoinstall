@@ -1,0 +1,62 @@
+# ============================================================
+# 无人值守安装答案（追加在 Kali 官方 preseed 之后，覆盖默认值）
+# 占位符由 scripts/build-iso.sh 渲染
+# ============================================================
+
+## 语言 / 键盘
+d-i debian-installer/language string en
+d-i debian-installer/country string @COUNTRY@
+d-i debian-installer/locale string en_US.UTF-8
+d-i localechooser/supported-locales multiselect en_US.UTF-8
+d-i console-setup/ask_detect boolean false
+d-i keyboard-configuration/xkb-keymap select us
+
+## 网络
+d-i netcfg/choose_interface select auto
+d-i netcfg/dhcp_timeout string 60
+d-i netcfg/get_hostname string @HOSTNAME@
+d-i netcfg/get_domain string local
+d-i netcfg/disable_autoconfig boolean false
+
+## 镜像源
+d-i mirror/country string manual
+d-i mirror/http/hostname string @MIRROR_HOST@
+d-i mirror/http/directory string @MIRROR_DIR@
+d-i mirror/http/proxy string
+d-i mirror/https/hostname string @MIRROR_HOST@
+d-i mirror/https/directory string @MIRROR_DIR@
+
+## 账号（Kali 官方默认禁用 root，使用 sudo 用户）
+d-i passwd/root-login boolean false
+d-i passwd/user-fullname string @USERNAME@
+d-i passwd/username string @USERNAME@
+d-i passwd/user-password password @PASSWORD@
+d-i passwd/user-password-again password @PASSWORD@
+
+## 时间
+d-i clock-setup/utc boolean true
+d-i time/zone string @TIMEZONE@
+d-i clock-setup/ntp boolean false
+
+## 分区：整盘单分区（EFI 会自动创建 ESP）
+d-i partman-auto/method string regular
+d-i partman-auto/disk string @DISK@
+d-i partman-auto/choose_recipe select atomic
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+
+## 软件包
+d-i pkgsel/upgrade select none
+d-i pkgsel/update-policy select none
+d-i pkgsel/include string @DESKTOP@ openssh-server open-vm-tools open-vm-tools-desktop
+tasksel tasksel/first multiselect standard
+
+## 引导与收尾
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+d-i cdrom-detect/eject boolean true
+d-i finish-install/reboot_in_progress note
