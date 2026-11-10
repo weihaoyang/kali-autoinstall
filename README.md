@@ -8,6 +8,11 @@
   <img alt="kali" src="https://img.shields.io/badge/Kali-2026.3-557C94">
   <img alt="arch" src="https://img.shields.io/badge/arch-arm64%20%7C%20amd64-informational">
   <img alt="boot" src="https://img.shields.io/badge/boot-UEFI%20%2B%20BIOS-success">
+  <img alt="build" src="https://github.com/weihaoyang/kali-autoinstall/actions/workflows/build-iso.yml/badge.svg">
+</p>
+
+<p align="center">
+  <b>简体中文</b> · <a href="README.en.md">English</a>
 </p>
 
 <h3 align="center">一条命令，把 Kali 官方 ISO 变成零交互安装盘</h3>
@@ -147,19 +152,16 @@ flowchart LR
 
 ## 🖥️ 创建虚拟机
 
-### VMware Fusion（Apple Silicon）
+### VMware Fusion（Apple Silicon）— 一条命令
 
 ```bash
-VMCLI="/Applications/VMware Fusion.app/Contents/Public/vmcli"
-
-"$VMCLI" VM Create -n "Kali Linux" -d "$HOME/VMs/Fusion" -c arm-other5xlinux-64
-
-VD="/Applications/VMware Fusion.app/Contents/Library/vmware-vdiskmanager"
-"$VD" -x 80GB "$HOME/VMs/Fusion/Kali Linux.vmdk"
+./scripts/fusion-quickstart.sh -i ~/VMs/kali-auto-arm64.iso
 ```
 
-然后按 [docs/apple-silicon-fusion.md](docs/apple-silicon-fusion.md) 里的 `.vmx` 模板
-配 4 vCPU / 8 GB / EFI / SATA 光驱 / vmxnet3 NAT，启动即可。
+自动完成：`vmcli` 建 VM → 磁盘扩到 80 GB → 写入 4 vCPU / 8 GB / EFI / vmxnet3 的 `.vmx`
+→ 挂 ISO → 启动。
+
+手动步骤和 `.vmx` 模板见 [docs/apple-silicon-fusion.md](docs/apple-silicon-fusion.md)。
 
 > ⚠️ **Apple Silicon 只能跑 arm64 客户机。** Kali 官网的 `-vmware-amd64.7z`
 > 是 x86_64 镜像，在 M 系列 Mac 上开机会提示客户机操作系统不受支持——不是 Fusion 的问题，
@@ -231,9 +233,10 @@ Kali 仓库里的 `zeek` 版本可能依赖旧 `glibc`，在新版系统上装�
 - [x] arm64 自动安装盘（Apple Silicon / VMware Fusion）
 - [x] 参数化 preseed + GRUB 补丁
 - [x] Release 成品 ISO
-- [ ] Fusion 一键脚本（建 VM + 挂 ISO + 启动）
-- [ ] 英文 README
-- [ ] CI：每次 Kali 发版自动构建并校验
+- [x] Fusion 一键脚本（建 VM + 挂 ISO + 启动）
+- [x] 英文 README（[README.en.md](README.en.md)）
+- [x] CI：GitHub Actions 自动下载官方 ISO、校验、构建并上传 artifact
+- [ ] 每次 Kali 发版自动创建 Release（定时任务）
 
 ## 📄 License
 
