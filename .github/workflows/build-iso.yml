@@ -27,7 +27,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Shell syntax + shellcheck
         run: |
           sudo apt-get update -qq
@@ -43,7 +43,7 @@ jobs:
       KALI_VERSION: ${{ github.event.inputs.kali_version || '2026.3' }}
       ARCH: ${{ github.event.inputs.arch || 'arm64' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install xorriso
         run: |
@@ -72,7 +72,7 @@ jobs:
             --disk /dev/sda
           sha256sum "kali-auto-${ARCH}.iso" | tee "kali-auto-${ARCH}.iso.sha256"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: kali-auto-${{ env.ARCH }}-${{ env.KALI_VERSION }}
           path: |
